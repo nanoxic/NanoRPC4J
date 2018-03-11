@@ -1,5 +1,8 @@
 package com.nanoxic.nanorpc4j.examples;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+
 import com.nanoxic.nanorpc4j.NanoRPC4J;
 import com.nanoxic.nanorpc4j.model.account.Account;
 import com.nanoxic.nanorpc4j.model.account.History;
@@ -7,15 +10,21 @@ import com.nanoxic.nanorpc4j.model.account.HistoryItem;
 
 public class Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ConfigurationException {
+		
+		// Load config
+		PropertiesConfiguration config = new PropertiesConfiguration();
+		config.load("application.properties");
 
-		String publicKey = "02B471BC75525CD0EB7781A1297214FEE60D42787B03BC2D8D4E6AD05704592E";
-		String address = "xrb_11ong8y9cnkwt5oqh1f377s3bzq83o39iyr5qiprtmmct3diapbg6nuq3ygd";
-		String hostname = "localhost";
-		int port = 7096;
+		String publicKey = config.getString("publicKey");
+		String address = config.getString("address");
+		String hostname = config.getString("hostname");
+		int port = config.getInt("port");
 
+		// initialize the client
 		NanoRPC4J.init(hostname, port);
 
+		// show functions using public key
 		Account account = new Account(publicKey);
 		System.out.println(account.getAccount());
 		System.out.println(account.getPublicKey());
@@ -26,6 +35,7 @@ public class Test {
 		System.out.println(account.getRepresentative());
 		System.out.println();
 
+		// show functions using address
 		account = new Account(address);
 		System.out.println(account.getAccount());
 		System.out.println(account.getPublicKey());
