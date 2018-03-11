@@ -4,5 +4,7 @@ A Java Client library for interacting with rai_node 10
 
 Usage:
 
-`git clone https://github.com/nanoxic/NanoRPC4J.git
+`
+git clone https://github.com/nanoxic/NanoRPC4J.git
+cd NanoRPC4J/
 `
