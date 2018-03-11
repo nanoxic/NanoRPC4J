@@ -8,7 +8,7 @@ import com.nanoxic.nanorpc4j.model.account.Account;
 import com.nanoxic.nanorpc4j.model.account.History;
 import com.nanoxic.nanorpc4j.model.account.HistoryItem;
 
-public class Test {
+public class AccountTest {
 
 	public static void main(String[] args) throws ConfigurationException {
 		
@@ -29,7 +29,6 @@ public class Test {
 		System.out.println(account.getAccount());
 		System.out.println(account.getPublicKey());
 		System.out.println(account.getBalance());
-
 		System.out.println(account.getPending());
 		System.out.println(account.getBlockCount());
 		System.out.println(account.getRepresentative());

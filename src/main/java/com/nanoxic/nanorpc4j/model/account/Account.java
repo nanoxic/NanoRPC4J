@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import com.nanoxic.nanorpc4j.exception.InitializationException;
 import com.nanoxic.nanorpc4j.http.HttpClient;
+import com.nanoxic.nanorpc4j.messages.BalanceResponse;
 
 public class Account {
 
@@ -76,6 +77,10 @@ public class Account {
 		return Integer.valueOf(blockCountResponse.getBlock_count());
 	}
 
+	public void getWeight() {
+		// TODO implement
+	}
+	
 	public AccountInfoResponse getInfo() {
 		return (AccountInfoResponse) HttpClient.getResponse(new AccountRequest("account_info", account),
 				AccountInfoResponse.class);

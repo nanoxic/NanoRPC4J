@@ -15,7 +15,7 @@ cd NanoRPC4J/
 * Then run:
 ```
 mvn clean install
-java -jar target/NanoRPC-0.0.1-SNAPSHOT-jar-with-dependencies.jar 
+java -jar target/NanoRPC-0.0.2-SNAPSHOT-jar-with-dependencies.jar 
 ````
 
 ## Contribute

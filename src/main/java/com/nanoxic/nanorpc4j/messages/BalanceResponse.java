@@ -1,6 +1,4 @@
-package com.nanoxic.nanorpc4j.model.account;
-
-import com.nanoxic.nanorpc4j.messages.ResponseMessage;
+package com.nanoxic.nanorpc4j.messages;
 
 public class BalanceResponse extends ResponseMessage {
 
