@@ -9,9 +9,14 @@ public class Test {
 
 	public static void main(String[] args) {
 
-		NanoRPC4J.init("localhost", 7096);
+		String publicKey = "02B471BC75525CD0EB7781A1297214FEE60D42787B03BC2D8D4E6AD05704592E";
+		String address = "xrb_11ong8y9cnkwt5oqh1f377s3bzq83o39iyr5qiprtmmct3diapbg6nuq3ygd";
+		String hostname = "localhost";
+		int port = 7096;
 
-		Account account = new Account("02B471BC75525CD0EB7781A1297214FEE60D42787B03BC2D8D4E6AD05704592E");
+		NanoRPC4J.init(hostname, port);
+
+		Account account = new Account(publicKey);
 		System.out.println(account.getAccount());
 		System.out.println(account.getPublicKey());
 		System.out.println(account.getBalance());
@@ -21,7 +26,7 @@ public class Test {
 		System.out.println(account.getRepresentative());
 		System.out.println();
 
-		account = new Account("xrb_11ong8y9cnkwt5oqh1f377s3bzq83o39iyr5qiprtmmct3diapbg6nuq3ygd");
+		account = new Account(address);
 		System.out.println(account.getAccount());
 		System.out.println(account.getPublicKey());
 		System.out.println(account.getBalance());

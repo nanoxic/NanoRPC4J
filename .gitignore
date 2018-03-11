@@ -4,3 +4,4 @@
 .classpath
 .project
 /src/main/java/Todo.java
+/src/main/resources/application.properties
