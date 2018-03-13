@@ -65,19 +65,19 @@ public class Wallet {
 	public List<String> createAddresses(int count) {
 		return null;
 	}
-	
+
 	public List<Account> createAccounts(int count) {
 		return null;
 	}
-	
+
 	public List<String> createAddresses(int count, boolean work) {
 		return null;
 	}
-	
+
 	public List<Account> createAccounts(int count, boolean work) {
 		return null;
 	}
-	
+
 	public void getBalances(List<String> addresses) {
 		// "accounts_balances"
 	}
@@ -92,5 +92,9 @@ public class Wallet {
 
 	public void getBalances(BigInteger threshold) {
 		// "action": "wallet_balances"
+	}
+
+	public void SearchPending() {
+		// "action": "search_pending"
 	}
 }
