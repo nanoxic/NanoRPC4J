@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.wallet;
 
 import com.nanoxic.nanorpc4j.messages.RequestMessage;
 
-class WalletRequest extends RequestMessage {
+public class WalletRequest extends RequestMessage {
 
 	private static final long serialVersionUID = -965143531935325162L;
 

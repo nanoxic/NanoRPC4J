@@ -50,7 +50,7 @@ public class WalletTest {
 		System.out.println();
 		HashMap<String, Balance> j = wallet.getBalances(new BigInteger("1"));
 		Iterator<?> it = j.entrySet().iterator();
-		int counter = 0;
+		int counter = 6; // generate unique ids for production use
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
 			System.out.println(pair.getKey() + " = " + pair.getValue());

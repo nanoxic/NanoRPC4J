@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.account;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-class AccountResponse extends ResponseMessage {
+public class AccountResponse extends ResponseMessage {
 
 	private String account;
 

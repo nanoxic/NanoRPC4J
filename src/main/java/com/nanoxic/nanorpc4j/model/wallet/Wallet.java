@@ -17,26 +17,32 @@ import com.nanoxic.nanorpc4j.model.account.Account;
  */
 public class Wallet {
 
-	private String wallet;
+	private String walletId;
 
 	// Constructor
 	/**
 	 * Initialize the wallet using a wallet ID
 	 * 
-	 * @param wallet
+	 * @param walletId
 	 *            The wallet ID
 	 */
-	public Wallet(String wallet) {
-		this.wallet = wallet;
+	public Wallet(String walletId) {
+		this.walletId = walletId;
 	}
 
+	// Getters and Setters
+	public String getWalletId() {
+		return walletId;
+	} 
+	
+	// Methodes
 	/**
 	 * Returns the sum of all accounts balances in wallet
 	 * 
 	 * @return The sum of all accounts balances in wallet
 	 */
 	public BigInteger getBalance() {
-		Balance balanceResponse = (Balance) HttpClient.getResponse(new WalletRequest("wallet_balance_total", wallet),
+		Balance balanceResponse = (Balance) HttpClient.getResponse(new WalletRequest("wallet_balance_total", walletId),
 				Balance.class);
 		return new BigInteger(balanceResponse.getBalance());
 	}
@@ -47,13 +53,13 @@ public class Wallet {
 	 * @return The sum of all pending amounts in all accounts in wallet
 	 */
 	public BigInteger getPending() {
-		Balance balanceResponse = (Balance) HttpClient.getResponse(new WalletRequest("wallet_balance_total", wallet),
+		Balance balanceResponse = (Balance) HttpClient.getResponse(new WalletRequest("wallet_balance_total", walletId),
 				Balance.class);
 		return new BigInteger(balanceResponse.getPending());
 	}
 
 	public boolean contains(String address) {
-		ContainsRequest containsRequest = new ContainsRequest("wallet_contains", wallet);
+		ContainsRequest containsRequest = new ContainsRequest("wallet_contains", walletId);
 		containsRequest.setAccount(address);
 		ContainsResponse containsResponse = (ContainsResponse) HttpClient.getResponse(containsRequest,
 				ContainsResponse.class);
@@ -62,13 +68,13 @@ public class Wallet {
 
 	public boolean isLocked() {
 		LockedResponse lockedResponse = (LockedResponse) HttpClient
-				.getResponse(new WalletRequest("wallet_locked", wallet), LockedResponse.class);
+				.getResponse(new WalletRequest("wallet_locked", walletId), LockedResponse.class);
 		return (lockedResponse.getLocked() == 1);
 	}
 
 	public List<String> getAllAddresses() {
 		ListAccountsResponse listAccountsResponse = (ListAccountsResponse) HttpClient
-				.getResponse(new WalletRequest("account_list", wallet), ListAccountsResponse.class);
+				.getResponse(new WalletRequest("account_list", walletId), ListAccountsResponse.class);
 		return listAccountsResponse.getAccounts();
 	}
 
@@ -78,7 +84,7 @@ public class Wallet {
 
 	public String createAddress() {
 		CreateAccountResponse createAccountResponse = (CreateAccountResponse) HttpClient
-				.getResponse(new WalletRequest("account_create", wallet), CreateAccountResponse.class);
+				.getResponse(new WalletRequest("account_create", walletId), CreateAccountResponse.class);
 		return createAccountResponse.getAccount();
 	}
 
@@ -121,7 +127,7 @@ public class Wallet {
 	}
 
 	public HashMap<String, Balance> getBalances(BigInteger threshold) {
-		BalanceRequest balanceRequest = new BalanceRequest("wallet_balances", wallet);
+		BalanceRequest balanceRequest = new BalanceRequest("wallet_balances", walletId);
 		balanceRequest.setThreshold(threshold);
 		BalanceResponse balanceResponse = (BalanceResponse) HttpClient.getResponse(balanceRequest,
 				BalanceResponse.class);
@@ -135,7 +141,7 @@ public class Wallet {
 	 */
 	public boolean SearchPending() {
 		PendingResponse pendingResponse = (PendingResponse) HttpClient
-				.getResponse(new WalletRequest("search_pending", wallet), PendingResponse.class);
+				.getResponse(new WalletRequest("search_pending", walletId), PendingResponse.class);
 		return (pendingResponse.getStarted() == 1);
 	}
 
@@ -153,12 +159,16 @@ public class Wallet {
 	 * @return The send block that was generated
 	 */
 	public String send(String sourceAddress, String destinationAddress, BigInteger amount, String id) {
-		SendRequest sendRequest = new SendRequest("send", wallet);
+		SendRequest sendRequest = new SendRequest("send", walletId);
 		sendRequest.setSource(sourceAddress);
 		sendRequest.setDestination(destinationAddress);
 		sendRequest.setAmount(amount);
 		sendRequest.setId(id);
 		SendResponse sendResponse = (SendResponse) HttpClient.getResponse(sendRequest, SendResponse.class);
 		return sendResponse.getBlock();
+	}
+
+	public String send(Account sourceAccount, Account destinationAccount, BigInteger amount, String id) {
+		return send(sourceAccount.getAddress(), destinationAccount.getAddress(), amount, id);
 	}
 }
