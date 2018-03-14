@@ -4,6 +4,13 @@
 	<groupId>NanoRPC</groupId>
 	<artifactId>NanoRPC</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
+
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -26,19 +33,9 @@
 			<version>1.6</version>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>com.nanoxic.nanorpc4j.examples.Test</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -50,6 +47,11 @@
 							<goal>single</goal>
 						</goals>
 						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>com.nanoxic.nanorpc4j.examples.AccountTest</mainClass>
+								</manifest>
+							</archive>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
@@ -64,4 +66,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	
 </project>

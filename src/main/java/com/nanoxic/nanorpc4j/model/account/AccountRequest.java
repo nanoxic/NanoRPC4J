@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.account;
 
 import com.nanoxic.nanorpc4j.messages.RequestMessage;
 
-public class AccountRequest extends RequestMessage {
+class AccountRequest extends RequestMessage {
 
 	private static final long serialVersionUID = -965143531935325162L;
 

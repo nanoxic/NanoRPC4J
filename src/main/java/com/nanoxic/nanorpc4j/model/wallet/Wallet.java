@@ -1,30 +1,54 @@
 package com.nanoxic.nanorpc4j.model.wallet;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.nanoxic.nanorpc4j.http.HttpClient;
-import com.nanoxic.nanorpc4j.messages.BalanceResponse;
+import com.nanoxic.nanorpc4j.messages.Balance;
 import com.nanoxic.nanorpc4j.model.account.Account;
 
+/**
+ * Class representing a single Nano wallet
+ * 
+ * @author Koen De Voegt
+ *
+ */
 public class Wallet {
 
 	private String wallet;
 
+	// Constructor
+	/**
+	 * Initialize the wallet using a wallet ID
+	 * 
+	 * @param wallet
+	 *            The wallet ID
+	 */
 	public Wallet(String wallet) {
 		this.wallet = wallet;
 	}
 
+	/**
+	 * Returns the sum of all accounts balances in wallet
+	 * 
+	 * @return The sum of all accounts balances in wallet
+	 */
 	public BigInteger getBalance() {
-		BalanceResponse balanceResponse = (BalanceResponse) HttpClient
-				.getResponse(new WalletRequest("wallet_balance_total", wallet), BalanceResponse.class);
+		Balance balanceResponse = (Balance) HttpClient.getResponse(new WalletRequest("wallet_balance_total", wallet),
+				Balance.class);
 		return new BigInteger(balanceResponse.getBalance());
 	}
 
+	/**
+	 * Returns the sum of all pending amounts in all accounts in wallet
+	 * 
+	 * @return The sum of all pending amounts in all accounts in wallet
+	 */
 	public BigInteger getPending() {
-		BalanceResponse balanceResponse = (BalanceResponse) HttpClient
-				.getResponse(new WalletRequest("wallet_balance_total", wallet), BalanceResponse.class);
+		Balance balanceResponse = (Balance) HttpClient.getResponse(new WalletRequest("wallet_balance_total", wallet),
+				Balance.class);
 		return new BigInteger(balanceResponse.getPending());
 	}
 
@@ -86,15 +110,55 @@ public class Wallet {
 		// "accounts_balances"
 	}
 
-	public void getBalances() {
-		// "action": "wallet_balances"
+	/**
+	 * Returns how many rai is owned and how many have not yet been received by all
+	 * accounts in wallet
+	 * 
+	 * @return vqsdfdqs TODO dsf
+	 */
+	public HashMap<String, Balance> getBalances() {
+		return getBalances(BigInteger.ZERO);
 	}
 
-	public void getBalances(BigInteger threshold) {
-		// "action": "wallet_balances"
+	public HashMap<String, Balance> getBalances(BigInteger threshold) {
+		BalanceRequest balanceRequest = new BalanceRequest("wallet_balances", wallet);
+		balanceRequest.setThreshold(threshold);
+		BalanceResponse balanceResponse = (BalanceResponse) HttpClient.getResponse(balanceRequest,
+				BalanceResponse.class);
+		return balanceResponse.getBalances();
 	}
 
-	public void SearchPending() {
-		// "action": "search_pending"
+	/**
+	 * Tells the node to look for pending blocks for any account in wallet
+	 * 
+	 * @return True if command was correctly started
+	 */
+	public boolean SearchPending() {
+		PendingResponse pendingResponse = (PendingResponse) HttpClient
+				.getResponse(new WalletRequest("search_pending", wallet), PendingResponse.class);
+		return (pendingResponse.getStarted() == 1);
+	}
+
+	/**
+	 * Send amount from source Address in wallet to destination Address
+	 * 
+	 * @param sourceAddress
+	 *            The address to send from, must be in current wallet
+	 * @param destinationAddress
+	 *            The address to send to
+	 * @param amount
+	 *            The amount to send
+	 * @param id
+	 *            A unique id for each spend to provide idempotency
+	 * @return The send block that was generated
+	 */
+	public String send(String sourceAddress, String destinationAddress, BigInteger amount, String id) {
+		SendRequest sendRequest = new SendRequest("send", wallet);
+		sendRequest.setSource(sourceAddress);
+		sendRequest.setDestination(destinationAddress);
+		sendRequest.setAmount(amount);
+		sendRequest.setId(id);
+		SendResponse sendResponse = (SendResponse) HttpClient.getResponse(sendRequest, SendResponse.class);
+		return sendResponse.getBlock();
 	}
 }

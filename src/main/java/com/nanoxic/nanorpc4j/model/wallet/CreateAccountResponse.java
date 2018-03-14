@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.wallet;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-public class CreateAccountResponse extends ResponseMessage {
+class CreateAccountResponse extends ResponseMessage {
 
 	private String account;
 

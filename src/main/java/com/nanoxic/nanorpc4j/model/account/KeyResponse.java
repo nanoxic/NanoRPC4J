@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.account;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-public class KeyResponse extends ResponseMessage {
+class KeyResponse extends ResponseMessage {
 
 	private String key;
 

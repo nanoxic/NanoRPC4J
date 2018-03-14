@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-public class ListAccountsResponse extends ResponseMessage {
+class ListAccountsResponse extends ResponseMessage {
 
 	private List<String> accounts;
 

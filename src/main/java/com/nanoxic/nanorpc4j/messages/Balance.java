@@ -1,6 +1,6 @@
 package com.nanoxic.nanorpc4j.messages;
 
-public class BalanceResponse extends ResponseMessage {
+public class Balance extends ResponseMessage {
 
 	private String balance;
 	private String pending;
@@ -21,4 +21,8 @@ public class BalanceResponse extends ResponseMessage {
 		this.pending = pending;
 	}
 
+	public String toString() {
+		return "Amount: " + balance + " Pending: " + pending;
+	}
+	
 }

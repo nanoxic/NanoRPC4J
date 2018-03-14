@@ -1,6 +1,6 @@
 package com.nanoxic.nanorpc4j.model.account;
 
-public class AccountInfoRequest extends AccountRequest {
+class AccountInfoRequest extends AccountRequest {
 
 	private static final long serialVersionUID = 7723924438945394069L;
 

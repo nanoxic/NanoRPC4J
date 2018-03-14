@@ -1,11 +1,12 @@
 package com.nanoxic.nanorpc4j.examples;
 
+import java.util.List;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 import com.nanoxic.nanorpc4j.NanoRPC4J;
 import com.nanoxic.nanorpc4j.model.account.Account;
-import com.nanoxic.nanorpc4j.model.account.History;
 import com.nanoxic.nanorpc4j.model.account.HistoryItem;
 
 public class AccountTest {
@@ -26,17 +27,18 @@ public class AccountTest {
 
 		// show functions using public key
 		Account account = new Account(publicKey);
-		System.out.println(account.getAccount());
+		System.out.println(account.getAddress());
 		System.out.println(account.getPublicKey());
 		System.out.println(account.getBalance());
 		System.out.println(account.getPending());
 		System.out.println(account.getBlockCount());
+		System.out.println(account.getWeight());
 		System.out.println(account.getRepresentative());
 		System.out.println();
 
 		// show functions using address
 		account = new Account(address);
-		System.out.println(account.getAccount());
+		System.out.println(account.getAddress());
 		System.out.println(account.getPublicKey());
 		System.out.println(account.getBalance());
 		System.out.println(account.getPending());
@@ -58,8 +60,8 @@ public class AccountTest {
 		System.out.println(account.getInfo(true, true, true).getRepresentative_block());
 		System.out.println(account.getInfo(true, true, true).getWeight());
 		System.out.println();
-		History history = account.getHistory();
-		for (HistoryItem i : history.getHistory()) {
+		List<HistoryItem> history = account.getHistory();
+		for (HistoryItem i : history) {
 			System.out.println(i.getAccount());
 			System.out.println(i.getAmount());
 			System.out.println(i.getHash());
@@ -67,7 +69,7 @@ public class AccountTest {
 		}
 		System.out.println();
 		history = account.getHistory(20);
-		for (HistoryItem i : history.getHistory()) {
+		for (HistoryItem i : history) {
 			System.out.println(i.getAccount());
 			System.out.println(i.getAmount());
 			System.out.println(i.getHash());

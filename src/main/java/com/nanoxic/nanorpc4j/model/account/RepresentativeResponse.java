@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.account;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-public class RepresentativeResponse extends ResponseMessage {
+class RepresentativeResponse extends ResponseMessage {
 
 	private String representative;
 

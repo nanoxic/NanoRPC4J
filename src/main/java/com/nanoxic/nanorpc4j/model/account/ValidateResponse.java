@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.account;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-public class ValidateResponse extends ResponseMessage {
+class ValidateResponse extends ResponseMessage {
 	
 	private int valid;
 

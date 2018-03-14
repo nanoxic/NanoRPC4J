@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-public class History extends ResponseMessage{
+class HistoryResponse extends ResponseMessage{
 
 	private List<HistoryItem> history = new ArrayList<HistoryItem>();
 

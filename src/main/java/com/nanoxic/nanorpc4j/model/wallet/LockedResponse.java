@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.wallet;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-public class LockedResponse extends ResponseMessage {
+class LockedResponse extends ResponseMessage {
 
 	private int locked;
 

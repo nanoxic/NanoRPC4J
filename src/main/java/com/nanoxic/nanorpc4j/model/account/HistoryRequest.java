@@ -1,6 +1,6 @@
 package com.nanoxic.nanorpc4j.model.account;
 
-public class HistoryRequest extends AccountRequest {
+class HistoryRequest extends AccountRequest {
 
 	private static final long serialVersionUID = 7868753707387947478L;
 

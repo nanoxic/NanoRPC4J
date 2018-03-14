@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j.model.wallet;
 
 import com.nanoxic.nanorpc4j.messages.ResponseMessage;
 
-public class ContainsResponse extends ResponseMessage {
+class ContainsResponse extends ResponseMessage {
 
 	private int exists;
 

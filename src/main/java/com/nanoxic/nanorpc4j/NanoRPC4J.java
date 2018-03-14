@@ -11,10 +11,6 @@ import com.nanoxic.nanorpc4j.exception.InitializationException;
  */
 public class NanoRPC4J {
 
-	public static final String NODEVERSION = "10";
-	public static final String VERSION = "0.0.1";
-	public static final String JAVA_VERSION = System.getProperty("java.version");
-
 	private static String hostname;
 	private static int port = 7076;
 
@@ -61,7 +57,7 @@ public class NanoRPC4J {
 	 * @throws InitializationException
 	 *             if hostname is null
 	 */
-	public static void setHostname(final String hostname) {
+	private static void setHostname(final String hostname) {
 		if (hostname == null) {
 			throw new InitializationException("Hostname can not be null");
 		}
@@ -83,7 +79,7 @@ public class NanoRPC4J {
 	 * @param port
 	 *            The RPC port of the Rai/Nano node to use
 	 */
-	public static void setPort(final int port) {
+	private static void setPort(final int port) {
 		NanoRPC4J.port = port;
 	}
 
