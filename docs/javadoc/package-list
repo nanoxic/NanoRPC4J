@@ -1,9 +1,3 @@
 com.nanoxic.nanorpc4j
 com.nanoxic.nanorpc4j.examples
 com.nanoxic.nanorpc4j.exception
-com.nanoxic.nanorpc4j.http
-com.nanoxic.nanorpc4j.messages
-com.nanoxic.nanorpc4j.model.account
-com.nanoxic.nanorpc4j.model.node
-com.nanoxic.nanorpc4j.model.payment
-com.nanoxic.nanorpc4j.model.wallet

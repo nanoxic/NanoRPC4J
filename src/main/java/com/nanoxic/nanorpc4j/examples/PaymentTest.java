@@ -5,8 +5,8 @@ import java.math.BigInteger;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
-import com.nanoxic.nanorpc4j.NanoRPC4J;
-import com.nanoxic.nanorpc4j.model.payment.Payment;
+import com.nanoxic.nanorpc4j.Node;
+import com.nanoxic.nanorpc4j.Payment;
 
 public class PaymentTest {
 
@@ -20,7 +20,7 @@ public class PaymentTest {
 		int port = config.getInt("port");
 		
 		// initialize the client
-		NanoRPC4J.init(hostname, port);
+		Node.init(hostname, port);
 		
 		Payment payment = new Payment(walletId);
 		

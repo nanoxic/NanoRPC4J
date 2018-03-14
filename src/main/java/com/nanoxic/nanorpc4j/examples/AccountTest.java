@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
-import com.nanoxic.nanorpc4j.NanoRPC4J;
-import com.nanoxic.nanorpc4j.model.account.Account;
-import com.nanoxic.nanorpc4j.model.account.HistoryItem;
+import com.nanoxic.nanorpc4j.Account;
+import com.nanoxic.nanorpc4j.HistoryItem;
+import com.nanoxic.nanorpc4j.Node;
 
 public class AccountTest {
 
@@ -23,7 +23,7 @@ public class AccountTest {
 		int port = config.getInt("port");
 
 		// initialize the client
-		NanoRPC4J.init(hostname, port);
+		Node.init(hostname, port);
 
 		// show functions using public key
 		Account account = new Account(publicKey);
