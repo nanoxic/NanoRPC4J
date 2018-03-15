@@ -1,5 +1,7 @@
 package com.nanoxic.nanorpc4j;
 
+import java.math.BigInteger;
+
 import com.nanoxic.nanorpc4j.exception.InitializationException;
 
 /**
@@ -119,10 +121,21 @@ public class Node {
 	}
 
 	/**
+	 * Returns receive minimum for this node.
+	 * 
+	 * @return The receive minimum for this node.
+	 */
+	public static BigInteger getReceiveMinimum() {
+		ResponseAmount responseAmount = (ResponseAmount) HttpClient
+				.getResponse(new RequestMessage("receive_minimum"), ResponseAmount.class);
+		return responseAmount.getAmount();
+	}
+
+	/**
 	 * Stops the Node that is currently connected. Please note that it is not
 	 * possible to start a node using this library.
 	 * 
-	 * @return true if stopped
+	 * @return true if stopped.
 	 */
 	public static boolean stop() {
 		ResponseSuccess responseSuccess = (ResponseSuccess) HttpClient.getResponse(new RequestMessage("stop"),
