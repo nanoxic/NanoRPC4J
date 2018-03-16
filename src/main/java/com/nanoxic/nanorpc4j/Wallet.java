@@ -29,8 +29,8 @@ public class Wallet {
 	// Getters and Setters
 	public String getWalletId() {
 		return walletId;
-	} 
-	
+	}
+
 	// Methodes
 	/**
 	 * Returns the sum of all accounts balances in wallet
@@ -54,12 +54,37 @@ public class Wallet {
 		return new BigInteger(balanceResponse.getPending());
 	}
 
+	public boolean contains(Account account) {
+		return contains(account.getAddress());
+	}
+
 	public boolean contains(String address) {
 		RequestContains containsRequest = new RequestContains("wallet_contains", walletId);
 		containsRequest.setAccount(address);
 		ResponseContains containsResponse = (ResponseContains) HttpClient.getResponse(containsRequest,
 				ResponseContains.class);
 		return (containsResponse.getExists() == 1);
+	}
+
+	public boolean changePassword(String password) {
+		RequestPassword requestPassword = new RequestPassword("password_change", walletId);
+		requestPassword.setPassword(password);
+		ResponseChanged responseChanged = (ResponseChanged) HttpClient.getResponse(requestPassword,
+				ResponseChanged.class);
+		return (responseChanged.getChanged() == 1);
+	}
+
+	public boolean enterPassword(String password) {
+		RequestPassword requestPassword = new RequestPassword("password_enter", walletId);
+		requestPassword.setPassword(password);
+		ResponseValid responseValid = (ResponseValid) HttpClient.getResponse(requestPassword, ResponseValid.class);
+		return (responseValid.getValid() == 1);
+	}
+
+	public boolean hasValidPassword() {
+		ResponseValid responseValid = (ResponseValid) HttpClient
+				.getResponse(new RequestWallet("password_valid", walletId), ResponseValid.class);
+		return (responseValid.getValid() == 1);
 	}
 
 	public boolean isLocked() {
@@ -155,16 +180,44 @@ public class Wallet {
 	 * @return The send block that was generated
 	 */
 	public String send(String sourceAddress, String destinationAddress, BigInteger amount, String id) {
-		RequestSend sendRequest = new RequestSend("send", walletId);
-		sendRequest.setSource(sourceAddress);
-		sendRequest.setDestination(destinationAddress);
-		sendRequest.setAmount(amount);
-		sendRequest.setId(id);
-		ResponseSend sendResponse = (ResponseSend) HttpClient.getResponse(sendRequest, ResponseSend.class);
+		RequestSend requestSend = new RequestSend("send", walletId);
+		requestSend.setSource(sourceAddress);
+		requestSend.setDestination(destinationAddress);
+		requestSend.setAmount(amount);
+		requestSend.setId(id);
+		ResponseBlock sendResponse = (ResponseBlock) HttpClient.getResponse(requestSend, ResponseBlock.class);
 		return sendResponse.getBlock();
 	}
 
 	public String send(Account sourceAccount, Account destinationAccount, BigInteger amount, String id) {
 		return send(sourceAccount.getAddress(), destinationAccount.getAddress(), amount, id);
+	}
+
+	/**
+	 * Receive pending block for account in wallet
+	 * 
+	 * @param address
+	 * @param block
+	 * @return
+	 */
+	public String receive(String address, String block) {
+		RequestReceive requestReceive = new RequestReceive("receive", walletId);
+		requestReceive.setAddress(address);
+		requestReceive.setBlock(block);
+		ResponseBlock sendResponse = (ResponseBlock) HttpClient.getResponse(requestReceive, ResponseBlock.class);
+		return sendResponse.getBlock();
+	}
+
+	public String receive(String address, String block, String work) {
+		RequestReceive requestReceive = new RequestReceive("receive", walletId);
+		requestReceive.setAddress(address);
+		requestReceive.setBlock(block);
+		requestReceive.setWork(work);
+		ResponseBlock sendResponse = (ResponseBlock) HttpClient.getResponse(requestReceive, ResponseBlock.class);
+		return sendResponse.getBlock();
+	}
+	
+	public String receive(Account account, String block) {
+		return receive(account.getAddress(), block);
 	}
 }

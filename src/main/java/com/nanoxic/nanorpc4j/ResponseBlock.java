@@ -1,6 +1,6 @@
 package com.nanoxic.nanorpc4j;
 
-class ResponseSend extends ResponseMessage {
+public class ResponseBlock extends ResponseMessage {
 
 	private String block;
 
@@ -11,5 +11,4 @@ class ResponseSend extends ResponseMessage {
 	public void setBlock(String block) {
 		this.block = block;
 	}
-
 }

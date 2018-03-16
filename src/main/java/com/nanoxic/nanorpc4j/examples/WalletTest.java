@@ -56,12 +56,21 @@ public class WalletTest {
 			System.out.println(pair.getKey() + " = " + pair.getValue());
 			String mainWallet = "xrb_39afy3dbjdoeskk1x84imwrp59ubn9ghafyzpt67t7inyujn5xs1t5xptueq";
 			if (!pair.getKey().equals(mainWallet)) {
-				wallet.send(pair.getKey().toString(), mainWallet, new BigInteger(((Balance) pair.getValue()).getBalance()), Integer.toString(counter));
+				wallet.send(pair.getKey().toString(), mainWallet,
+						new BigInteger(((Balance) pair.getValue()).getBalance()), Integer.toString(counter));
 				counter++;
 			}
 
 			it.remove(); // avoids a ConcurrentModificationException
 		}
+		Account account = new Account("xrb_39afy3dbjdoeskk1x84imwrp59ubn9ghafyzpt67t7inyujn5xs1t5xptueq");
+		BigInteger i = account.getPending();
+		
+		String work = Node.generateWork("D5058AFA34F9D9A771AA0F51CBEE28077B573B3542CC3EE5869E5880F778C792");
+		System.out.println("Work: " + work);
+		System.out.print("Receive: ");
+		System.out.println(wallet.receive("xrb_39afy3dbjdoeskk1x84imwrp59ubn9ghafyzpt67t7inyujn5xs1t5xptueq",
+				"D5058AFA34F9D9A771AA0F51CBEE28077B573B3542CC3EE5869E5880F778C792", work));
 
 	}
 }

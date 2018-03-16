@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j;
 
 import java.math.BigInteger;
 
-public class RequestAmount extends RequestMessage {
+class RequestAmount extends RequestMessage {
 
 	private static final long serialVersionUID = -1291828500989167697L;
 

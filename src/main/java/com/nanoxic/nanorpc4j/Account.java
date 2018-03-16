@@ -26,7 +26,7 @@ public class Account {
 	 */
 	public Account(String accountKey) {
 		if (accountKey.startsWith("xrb")) {
-			if (validate(accountKey)) {
+			if (Node.isValidAddress(accountKey)) {
 				this.address = accountKey;
 				this.publicKey = getpublicKey();
 				valid = true;
@@ -65,12 +65,6 @@ public class Account {
 	}
 
 	// Private methodes // TODO move to Wallet of Node???
-	private boolean validate(String address) {
-		ResponseValidate validateResponse = (ResponseValidate) HttpClient
-				.getResponse(new RequestAccount("validate_account_number", address), ResponseValidate.class);
-		return (validateResponse.getValid() == 1);
-	}
-
 	private String getpublicKey() {
 		ResponseKey representativeResponse = (ResponseKey) HttpClient
 				.getResponse(new RequestAccount("account_key", address), ResponseKey.class);

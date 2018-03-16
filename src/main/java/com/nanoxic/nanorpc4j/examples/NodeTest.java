@@ -16,7 +16,7 @@ public class NodeTest {
 		int port = config.getInt("port");
 
 		// initialize the client
-		Node.init(hostname); // , port
+		Node.init(hostname, port);
 
 		// Get some info about the client
 		System.out.println(Node.getStoreVersion());
@@ -24,6 +24,7 @@ public class NodeTest {
 		System.out.println(Node.getRPCVersion());
 		System.out.println(Node.SearchPending());
 		System.out.println(Node.getReceiveMinimum());
+		System.out.println(Node.getAvailableSupply());
 		// Stops the running node
 		// System.out.println(Node.stop());
 	}

@@ -6,7 +6,7 @@ import com.nanoxic.nanorpc4j.exception.InitializationException;
 
 /**
  * 
- * Singleton class to initialize NanoRPC4J representing the Nano Node.
+ * Singleton class to initialize NanoRPC4J representing the Nano node.
  * 
  * @author Koen De Voegt
  *
@@ -109,6 +109,28 @@ public class Node {
 	}
 
 	/**
+	 * 
+	 * @param account
+	 * @return
+	 */
+	public static boolean isValidAccount(Account account) {
+		return isValidAddress(account.getAddress());
+	}
+
+	/**
+	 * Check whether given string is a valid Nano address
+	 * 
+	 * @param address
+	 *            a string containing an address to verify
+	 * @return true if the string provided contains a valid Nano address
+	 */
+	public static boolean isValidAddress(String address) {
+		ResponseValidate validateResponse = (ResponseValidate) HttpClient
+				.getResponse(new RequestAccount("validate_account_number", address), ResponseValidate.class);
+		return (validateResponse.getValid() == 1);
+	}
+
+	/**
 	 * Tells the node to look for pending blocks for any account in all available
 	 * wallets
 	 * 
@@ -126,9 +148,20 @@ public class Node {
 	 * @return The receive minimum for this node.
 	 */
 	public static BigInteger getReceiveMinimum() {
-		ResponseAmount responseAmount = (ResponseAmount) HttpClient
-				.getResponse(new RequestMessage("receive_minimum"), ResponseAmount.class);
+		ResponseAmount responseAmount = (ResponseAmount) HttpClient.getResponse(new RequestMessage("receive_minimum"),
+				ResponseAmount.class);
 		return responseAmount.getAmount();
+	}
+
+	/**
+	 * Returns how many rai are in the public supply.
+	 * 
+	 * @return Amount of rai in the public supply.
+	 */
+	public static BigInteger getAvailableSupply() {
+		ResponseAvailable responseAvailable = (ResponseAvailable) HttpClient
+				.getResponse(new RequestMessage("available_supply"), ResponseAvailable.class);
+		return responseAvailable.getAvailable();
 	}
 
 	/**
@@ -141,6 +174,18 @@ public class Node {
 		ResponseSuccess responseSuccess = (ResponseSuccess) HttpClient.getResponse(new RequestMessage("stop"),
 				ResponseSuccess.class);
 		return responseSuccess.getSuccess().equals("");
+	}
+
+	/**
+	 * 
+	 * @param block
+	 * @return
+	 */
+	public static String generateWork(String block) {
+		RequestHash requestHash = new RequestHash("work_generate");
+		requestHash.setHash(block);
+		ResponseWork responseWork = (ResponseWork) HttpClient.getResponse(requestHash, ResponseWork.class);
+		return responseWork.getWork();
 	}
 
 	// Private Methods
