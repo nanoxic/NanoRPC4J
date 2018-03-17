@@ -1,6 +1,6 @@
 package com.nanoxic.nanorpc4j;
 
-public class RequestPassword extends RequestWallet {
+class RequestPassword extends RequestWallet {
 
 	private static final long serialVersionUID = 3653867039357232888L;
 

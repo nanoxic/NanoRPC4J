@@ -3,7 +3,7 @@ package com.nanoxic.nanorpc4j;
 import java.math.BigInteger;
 import java.util.List;
 
-import com.nanoxic.nanorpc4j.exception.InitializationException;
+import com.nanoxic.nanorpc4j.exceptions.InitializationException;
 
 /**
  * Class representing a single Nano account

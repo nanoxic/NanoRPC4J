@@ -5,18 +5,20 @@
 
 	<groupId>com.nanoxic.projects</groupId>
 	<artifactId>NanoRPC4J</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>NanoRPC4J</name>
 	<description>A Java Client library for interacting with rai_node 10</description>
-	<url>http://github.com/simpligility/ossrh-demo</url>
+	<url>https://github.com/nanoxic/NanoRPC4J</url>
+
 	<licenses>
 		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<name>GNU General Public License (GPL)</name>
+			<url>http://www.gnu.org/licenses/gpl.txt</url>
 		</license>
 	</licenses>
+
 	<developers>
 		<developer>
 			<name>Koen De Voegt</name>
@@ -25,10 +27,11 @@
 			<organizationUrl>http://blog.nanoxic.com</organizationUrl>
 		</developer>
 	</developers>
+
 	<scm>
-		<connection>scm:git:git://github.com/simpligility/ossrh-demo.git</connection>
-		<developerConnection>scm:git:ssh://github.com:simpligility/ossrh-demo.git</developerConnection>
-		<url>http://github.com/simpligility/ossrh-demo/tree/master</url>
+		<connection>scm:git:git://github.com/nanoxic/NanoRPC4J.git</connection>
+		<developerConnection>scm:git:ssh://github.com:nanoxic/NanoRPC4J.git</developerConnection>
+		<url>http://github.com/nanoxic/NanoRPC4J/tree/master</url>
 	</scm>
 
 	<distributionManagement>
@@ -101,6 +104,28 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<excludes>
+						<exclude>application.properties</exclude>
+						<exclude>Todo.class</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<excludes>
+						<exclude>application.properties</exclude>
+						<exclude>Todo.java</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

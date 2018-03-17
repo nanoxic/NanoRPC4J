@@ -1,6 +1,6 @@
 package com.nanoxic.nanorpc4j;
 
-public class RequestHash extends RequestMessage {
+class RequestHash extends RequestMessage {
 
 	private static final long serialVersionUID = 7582170544853685526L;
 

@@ -1,6 +1,6 @@
 package com.nanoxic.nanorpc4j;
 
-public class ResponseWork extends ResponseMessage {
+class ResponseWork extends ResponseMessage {
 
 	private String work;
 

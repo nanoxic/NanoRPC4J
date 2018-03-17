@@ -2,7 +2,7 @@ package com.nanoxic.nanorpc4j;
 
 import java.math.BigInteger;
 
-import com.nanoxic.nanorpc4j.exception.InitializationException;
+import com.nanoxic.nanorpc4j.exceptions.InitializationException;
 
 /**
  * 

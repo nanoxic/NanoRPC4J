@@ -1,6 +1,6 @@
 package com.nanoxic.nanorpc4j;
 
-public class ResponseBlock extends ResponseMessage {
+class ResponseBlock extends ResponseMessage {
 
 	private String block;
 
