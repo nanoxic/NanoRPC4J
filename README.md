@@ -1,22 +1,43 @@
 # NanoRPC4J
 
-A Java Client library for interacting with rai_node 10
+A Java Client library for interacting with rai_node 10.
+Latest version: 
 
-## Running example
+## Usage
 
-* Make sure you have a running rai_node 10 available and RPC is enabled
+* Make sure you have a running rai_node 10 available
+* Enabled RPC: Set *rpc_enable* to true in your config.json
+* Some functions require that *enable_control* is also set to true
+
+### JAR
+
+Download the latest jar file here and add it to your build path.
+
+### Maven
+
+No releases yet. To use a snapshot add following repository to your pom.xml
 ```
-git clone https://github.com/nanoxic/NanoRPC4J.git
-cd NanoRPC4J/
+<repository>
+	<id>oss-sonatype</id>
+	<name>oss-sonatype</name>
+	<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+	<snapshots>
+		<enabled>true</enabled>
+	</snapshots>
+</repository>
 ```
-* Rename application.properties.example to application.properties in src/main/resources
-* Add the hostname and port form your node
-* Add a public key and Rai/Nano address
-* Then run:
+Then add the dependency itself:
 ```
-mvn clean install
-java -jar target/NanoRPC-0.0.2-SNAPSHOT-jar-with-dependencies.jar 
-````
+<dependency>
+	<groupId>com.nanoxic</groupId>
+	<artifactId>NanoRPC4J</artifactId>
+	<version>0.0.4-SNAPSHOT</version>
+</dependency>
+```
+
+## Examples
+
+Some usage examples can be found here: <https://github.com/nanoxic/NanoRPC4J-examples>
 
 ## Documentation
 
