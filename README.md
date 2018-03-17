@@ -1,7 +1,7 @@
 # NanoRPC4J
 
 A Java Client library for interacting with rai_node 10.
-Latest version: 
+Latest version: 0.0.5-SNAPSHOT
 
 ## Usage
 
@@ -11,7 +11,8 @@ Latest version:
 
 ### JAR
 
-Download the latest jar file here and add it to your build path.
+Download the latest jar file and add it to your build path:
+<https://oss.sonatype.org/content/repositories/snapshots/com/nanoxic/NanoRPC4J/0.0.5-SNAPSHOT/>
 
 ### Maven
 
@@ -31,7 +32,7 @@ Then add the dependency itself:
 <dependency>
 	<groupId>com.nanoxic</groupId>
 	<artifactId>NanoRPC4J</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 </dependency>
 ```
 
