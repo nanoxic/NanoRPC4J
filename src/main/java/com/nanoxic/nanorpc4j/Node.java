@@ -109,20 +109,11 @@ public class Node {
 	}
 
 	/**
-	 * 
-	 * @param account
-	 * @return
-	 */
-	public static boolean isValidAccount(Account account) {
-		return isValidAddress(account.getAddress());
-	}
-
-	/**
 	 * Check whether given string is a valid Nano address
 	 * 
 	 * @param address
 	 *            a string containing an address to verify
-	 * @return true if the string provided contains a valid Nano address
+	 * @return True if the string provided contains a valid Nano address
 	 */
 	public static boolean isValidAddress(String address) {
 		ResponseValidate validateResponse = (ResponseValidate) HttpClient
@@ -177,9 +168,11 @@ public class Node {
 	}
 
 	/**
+	 * Generates work for block enable_control required
 	 * 
 	 * @param block
-	 * @return
+	 *            The pending block
+	 * @return The receive block
 	 */
 	public static String generateWork(String block) {
 		RequestHash requestHash = new RequestHash("work_generate");

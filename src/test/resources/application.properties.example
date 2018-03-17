@@ -2,7 +2,7 @@
 hostname = localhost
 port = 7076
 
-# account settings
+# account settings - for testing public key and address need to belong to the same account
 publicKey = XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 address = xrb_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 

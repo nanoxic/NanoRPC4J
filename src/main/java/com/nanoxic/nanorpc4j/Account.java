@@ -15,29 +15,27 @@ public class Account {
 
 	private String address;
 	private String publicKey;
-	private boolean valid;
 
 	// Constructor
 	/**
-	 * Initialize the account using either an address or a public key
+	 * Construct the Account using either an address or a public key
 	 * 
 	 * @param accountKey
 	 *            An address or an account public key
 	 */
 	public Account(String accountKey) {
-		if (accountKey.startsWith("xrb")) {
+		if (accountKey.startsWith("xrb_")) {
 			if (Node.isValidAddress(accountKey)) {
 				this.address = accountKey;
 				this.publicKey = getpublicKey();
-				valid = true;
 			} else {
-				valid = false;
 				throw new InitializationException("Not a valid NANO address");
 			}
 		} else {
 			this.address = getAddress(accountKey);
+			if (this.address == null)
+				throw new InitializationException("Not a valid NANO public key");
 			this.publicKey = accountKey;
-			valid = true;
 		}
 	}
 
@@ -60,11 +58,7 @@ public class Account {
 		return publicKey;
 	}
 
-	public boolean isValid() {
-		return valid;
-	}
-
-	// Private methodes // TODO move to Wallet of Node???
+	// Private methodes
 	private String getpublicKey() {
 		ResponseKey representativeResponse = (ResponseKey) HttpClient
 				.getResponse(new RequestAccount("account_key", address), ResponseKey.class);
@@ -84,8 +78,8 @@ public class Account {
 	 * @return The amount of RAW owned by this account
 	 */
 	public BigInteger getBalance() {
-		Balance balanceResponse = (Balance) HttpClient
-				.getResponse(new RequestAccount("account_balance", address), Balance.class);
+		Balance balanceResponse = (Balance) HttpClient.getResponse(new RequestAccount("account_balance", address),
+				Balance.class);
 		return new BigInteger(balanceResponse.getBalance());
 	}
 
@@ -95,8 +89,8 @@ public class Account {
 	 * @return The amount of RAW pending for this account
 	 */
 	public BigInteger getPending() {
-		Balance balanceResponse = (Balance) HttpClient
-				.getResponse(new RequestAccount("account_balance", address), Balance.class);
+		Balance balanceResponse = (Balance) HttpClient.getResponse(new RequestAccount("account_balance", address),
+				Balance.class);
 		return new BigInteger(balanceResponse.getPending());
 	}
 
@@ -122,11 +116,26 @@ public class Account {
 		return new BigInteger(weightResponse.getWeight());
 	}
 
+	/**
+	 * Returns frontier, open block, change representative block, balance, last
+	 * modified timestamp from local database &amp; block count for account.
+	 * 
+	 * @return An AccountInfo object containing the requested information
+	 */
 	public AccountInfo getInfo() {
-		return (AccountInfo) HttpClient.getResponse(new RequestAccount("account_info", address),
-				AccountInfo.class);
+		return (AccountInfo) HttpClient.getResponse(new RequestAccount("account_info", address), AccountInfo.class);
 	}
 
+	/**
+	 * Returns frontier, open block, change representative block, balance, last
+	 * modified timestamp from local database &amp; block count for account. Optionally
+	 * returns representative, voting weight, pending balance for account
+	 * 
+	 * @param representative Include the representative in the AccountInfo object 
+	 * @param weight Include the weight in the AccountInfo object
+	 * @param pending Include the pending in the AccountInfo object
+	 * @return An AccountInfo object containing the requested information
+	 */
 	public AccountInfo getInfo(boolean representative, boolean weight, boolean pending) {
 		RequestAccountInfo accountInfoRequest = new RequestAccountInfo("account_info", address);
 		accountInfoRequest.setRepresentative(representative);
@@ -136,18 +145,18 @@ public class Account {
 	}
 
 	/**
-	 * Reports the last 5 history items for this account
+	 * Returns the last count history items for this account, defaults to 5 items
 	 * 
+	 * @param count
+	 *            Either one or no Integer, the amount of history items wanted
 	 * @return The last 5 history items for this account
 	 */
-	// TODO use int... count
-	public List<HistoryItem> getHistory() {
-		return getHistory(5);
-	}
-
-	public List<HistoryItem> getHistory(int count) {
+	public List<HistoryItem> getHistory(int... count) {
+		int numberOfItems = 5;
+		if (count.length > 0)
+			numberOfItems = count[0];
 		RequestHistory historyRequest = new RequestHistory("account_history", address);
-		historyRequest.setCount(count);
+		historyRequest.setCount(numberOfItems);
 		return ((ResponseHistory) HttpClient.getResponse(historyRequest, ResponseHistory.class)).getHistory();
 	}
 
