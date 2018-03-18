@@ -1,7 +1,7 @@
 # NanoRPC4J
 
 A Java Client library for interacting with rai_node 10.
-Latest version: 0.0.5-SNAPSHOT
+Latest version: 0.0.7-SNAPSHOT
 
 ## Usage
 
@@ -12,7 +12,7 @@ Latest version: 0.0.5-SNAPSHOT
 ### JAR
 
 Download the latest jar file and add it to your build path:
-<https://oss.sonatype.org/content/repositories/snapshots/com/nanoxic/NanoRPC4J/0.0.5-SNAPSHOT/>
+<https://oss.sonatype.org/content/repositories/snapshots/com/nanoxic/NanoRPC4J/0.0.7-SNAPSHOT/>
 
 ### Maven
 
@@ -32,7 +32,7 @@ Then add the dependency itself:
 <dependency>
 	<groupId>com.nanoxic</groupId>
 	<artifactId>NanoRPC4J</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -43,6 +43,24 @@ Some usage examples can be found here: <https://github.com/nanoxic/NanoRPC4J-exa
 ## Documentation
 
 Javadocs available: <http://blog.nanoxic.com/NanoRPC4J/javadoc/>
+
+## Build
+
+```
+git clone https://github.com/nanoxic/NanoRPC4J.git
+cd NanoRPC4J/
+```
+Either run: 
+```
+mvn clean install -DskipTests
+```
+Or:
+* Rename application.properties.example to application.properties in src/test/resources
+* Add the hostname and port form your node
+* Add a public key, Rai/Nano address and Wallet ID
+```
+mvn clean install
+```
 
 ## Contribute
 
