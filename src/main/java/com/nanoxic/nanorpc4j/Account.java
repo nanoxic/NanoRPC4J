@@ -58,7 +58,7 @@ public class Account {
 		return publicKey;
 	}
 
-	// Private methodes
+	// Private methods
 	private String getpublicKey() {
 		ResponseKey representativeResponse = (ResponseKey) HttpClient
 				.getResponse(new RequestAccount("account_key", address), ResponseKey.class);
@@ -71,7 +71,7 @@ public class Account {
 		return representativeResponse.getAccount();
 	}
 
-	// Public methodes
+	// Public methods
 	/**
 	 * Returns how many RAW is owned by this account
 	 * 
