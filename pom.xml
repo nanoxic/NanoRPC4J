@@ -5,7 +5,7 @@
 
 	<groupId>com.nanoxic</groupId>
 	<artifactId>NanoRPC4J</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>jar</packaging>
 
 	<name>NanoRPC4J</name>
