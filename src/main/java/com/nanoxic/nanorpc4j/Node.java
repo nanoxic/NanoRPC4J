@@ -13,7 +13,7 @@ import com.nanoxic.nanorpc4j.exceptions.InitializationException;
  */
 public class Node {
 
-	private static String hostname;
+	private static String hostname = "localhost";
 	private static int port = 7076;
 	private static ResponseVersions responseVersions = null;
 
