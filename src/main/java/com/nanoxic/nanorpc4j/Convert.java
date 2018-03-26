@@ -23,6 +23,7 @@ public class Convert {
 	 *            The raw amount to convert
 	 * @return The rai amount
 	 */
+	@Deprecated
 	public static BigInteger raiFromRaw(BigInteger rawAmount) {
 		RequestAmount requestAmount = new RequestAmount("rai_from_raw");
 		requestAmount.setAmount(rawAmount);
@@ -37,6 +38,7 @@ public class Convert {
 	 *            The rai amount to convert
 	 * @return The raw amount
 	 */
+	@Deprecated
 	public static BigInteger raiToRaw(BigInteger raiAmount) {
 		RequestAmount requestAmount = new RequestAmount("rai_to_raw");
 		requestAmount.setAmount(raiAmount);
@@ -51,6 +53,7 @@ public class Convert {
 	 *            The raw amount to convert
 	 * @return The krai amount
 	 */
+	@Deprecated
 	public static BigInteger kraiFromRaw(BigInteger rawAmount) {
 		RequestAmount requestAmount = new RequestAmount("krai_from_raw");
 		requestAmount.setAmount(rawAmount);
@@ -65,6 +68,7 @@ public class Convert {
 	 *            The krai amount to convert
 	 * @return The raw amount
 	 */
+	@Deprecated
 	public static BigInteger kraiToRaw(BigInteger kraiAmount) {
 		RequestAmount requestAmount = new RequestAmount("krai_to_raw");
 		requestAmount.setAmount(kraiAmount);
@@ -79,6 +83,7 @@ public class Convert {
 	 *            The raw amount to convert
 	 * @return The Mrai amount
 	 */
+	@Deprecated
 	public static BigInteger mraiFromRaw(BigInteger rawAmount) {
 		RequestAmount requestAmount = new RequestAmount("mrai_from_raw");
 		requestAmount.setAmount(rawAmount);
@@ -93,6 +98,7 @@ public class Convert {
 	 *            The Mrai amount to convert
 	 * @return The raw amount
 	 */
+	@Deprecated
 	public static BigInteger mraiToRaw(BigInteger mraiAmount) {
 		RequestAmount requestAmount = new RequestAmount("mrai_to_raw");
 		requestAmount.setAmount(mraiAmount);

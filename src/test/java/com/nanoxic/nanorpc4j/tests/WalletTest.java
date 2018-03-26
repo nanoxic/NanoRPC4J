@@ -1,5 +1,8 @@
 package com.nanoxic.nanorpc4j.tests;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.BeforeClass;
@@ -7,10 +10,14 @@ import org.junit.Test;
 
 import com.nanoxic.nanorpc4j.Node;
 import com.nanoxic.nanorpc4j.Wallet;
+import com.nanoxic.nanorpc4j.exceptions.InitializationException;
+import com.nanoxic.nanorpc4j.exceptions.PasswordException;
 
 public class WalletTest {
 
 	private static String walletId;
+	private static String address;
+	private static String password;
 
 	@BeforeClass
 	public static void generalSetup() throws ConfigurationException {
@@ -22,32 +29,57 @@ public class WalletTest {
 		int port = config.getInt("port");
 
 		walletId = config.getString("walletId");
+		address = config.getString("address");
+		password = config.getString("password");
 
 		// initialize the client
 		Node.init(hostname, port);
 	}
 
+	// Constructor Tests
 	@Test
 	public void validWalletIdTest() {
-		System.out.println(walletId);
-		// Wallet wallet =
 		new Wallet(walletId);
-		// List<String> i = wallet.getAllAddresses();
-		// for (String address : i) {
-		// System.out.println(address);
-		// }
+	}
+
+	@Test(expected = InitializationException.class)
+	public void invalidWalletIdTest() {
+		new Wallet("XXXXXX");
+	}
+
+	@Test
+	public void passwordIdTest() {
+		new Wallet(walletId, password);
+	}
+
+	@Test(expected = PasswordException.class)
+	public void wrongPasswordTest() {
+		new Wallet(walletId, "WRONG-PASWORD");
+	}
+
+	// Methods tests
+	@Test
+	public void changePasswordNoPasswordTest() {
+		Wallet wallet = new Wallet(walletId);
+		wallet.enterPassword("WRONG-PASWORD");
+		assertThrows(PasswordException.class, () -> {
+			wallet.changePassword("newpassword");
+		});
+	}
+
+	@Test
+	public void changePasswordTest() {
+		Wallet wallet = new Wallet(walletId);
+		assertTrue(wallet.changePassword("newpassword"));
+		wallet.changePassword(password);
 	}
 
 	// @Test
-	// public void invalidWalletIdTest() {
-	// System.out.println(walletId);
-	// Wallet wallet = new Wallet("XXXXXX");
-	// List<String> i = wallet.getAllAddresses();
-	// System.out.println(i);
-	// System.out.println(wallet.isLocked());
-	// System.out.println(wallet.getBalance());
-	// for (String address : i) {
-	// System.out.println(address);
+	// public void test() {
+	// Wallet wallet = new Wallet(walletId);
+	// HashMap<Account, Balance> i = wallet.getBalances();
+	// for (Entry<Account, Balance> j : i.entrySet()) {
+	// System.out.println(j.getKey().getAddress() + " " + j.getValue());
 	// }
 	// }
 

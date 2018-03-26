@@ -1,41 +1,52 @@
 package com.nanoxic.nanorpc4j;
 
+/**
+ * Object representing one item in the Account history.
+ * 
+ * @author Koen De Voegt
+ *
+ */
 public class HistoryItem {
 
 	private String hash;
-	private String type;
+	private String type; // TODO enum???
 	private String account;
 	private String amount;
 
+	/**
+	 * The hash for this item.
+	 * 
+	 * @return The hash for this item.
+	 */
 	public String getHash() {
 		return hash;
 	}
 
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
-
+	/**
+	 * The type of this item.
+	 * 
+	 * @return The type of this item.
+	 */
 	public String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	/**
+	 * The Account of this item.
+	 * 
+	 * @return The Account of this item.
+	 */
+	public Account getAccount() {
+		return new Account(account);
 	}
 
-	public String getAccount() {
-		return account;
+	/**
+	 * The amount of this item.
+	 * 
+	 * @return The amount of this item.
+	 */
+	public NANO getAmount() {
+		return NANO.fromRAW(amount);
 	}
 
-	public void setAccount(String account) {
-		this.account = account;
-	}
-
-	public String getAmount() {
-		return amount;
-	}
-
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
 }

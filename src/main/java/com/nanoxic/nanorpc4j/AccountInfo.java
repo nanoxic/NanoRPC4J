@@ -1,16 +1,13 @@
 package com.nanoxic.nanorpc4j;
 
-public class AccountInfo extends ResponseMessage {
+class AccountInfo extends ResponseMessage {
 
 	private String frontier;
-	private String open_block;
+	private String open_block; 
 	private String representative_block;
 	private String balance;
 	private String modified_timestamp;
 	private String block_count;
-	private String representative;
-	private String weight;
-	private String pending;
 
 	public String getFrontier() {
 		return frontier;
@@ -58,30 +55,6 @@ public class AccountInfo extends ResponseMessage {
 
 	public void setBlock_count(String block_count) {
 		this.block_count = block_count;
-	}
-
-	public String getRepresentative() {
-		return representative;
-	}
-
-	public void setRepresentative(String representative) {
-		this.representative = representative;
-	}
-
-	public String getWeight() {
-		return weight;
-	}
-
-	public void setWeight(String weight) {
-		this.weight = weight;
-	}
-
-	public String getPending() {
-		return pending;
-	}
-
-	public void setPending(String pending) {
-		this.pending = pending;
 	}
 
 }

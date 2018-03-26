@@ -1,9 +1,12 @@
 package com.nanoxic.nanorpc4j;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.nanoxic.nanorpc4j.exceptions.InitializationException;
+import com.nanoxic.nanorpc4j.exceptions.PasswordException;
 
 /**
  * Class representing a single Nano wallet
@@ -14,6 +17,7 @@ import java.util.stream.Collectors;
 public class Wallet {
 
 	private String walletId;
+	private String password;
 
 	// Constructor
 	/**
@@ -23,7 +27,24 @@ public class Wallet {
 	 *            The wallet ID
 	 */
 	public Wallet(String walletId) {
-		this.walletId = walletId;
+		if (Node.contains(walletId))
+			this.walletId = walletId;
+		else
+			throw new InitializationException("Not a valid walletId for this Node");
+	}
+
+	/**
+	 * Initialize the wallet using a wallet ID and password.
+	 * 
+	 * @param walletId
+	 *            The wallet ID
+	 * @param password
+	 *            The password of this Wallet
+	 */
+	public Wallet(String walletId, String password) {
+		this(walletId);
+		if (!this.enterPassword(password))
+			throw new PasswordException("Incorrect password provided");
 	}
 
 	// Getters
@@ -36,19 +57,14 @@ public class Wallet {
 		return walletId;
 	}
 
-	// Private methods
-	private Balance getWalletBalancetotal() {
-		return (Balance) HttpClient.getResponse(new RequestWallet("wallet_balance_total", walletId), Balance.class);
-	}
-
 	// Public methods
 	/**
 	 * Returns the sum of all Account balances in wallet in RAW.
 	 * 
 	 * @return The sum of all Account balances in wallet in RAW.
 	 */
-	public BigInteger getBalance() {
-		return new BigInteger(getWalletBalancetotal().getBalance());
+	public NANO getBalance() {
+		return getWalletBalancetotal().getBalance();
 	}
 
 	/**
@@ -56,8 +72,8 @@ public class Wallet {
 	 * 
 	 * @return The sum of all pending amounts in all accounts in wallet in RAW.
 	 */
-	public BigInteger getPending() {
-		return new BigInteger(getWalletBalancetotal().getPending());
+	public NANO getPending() {
+		return getWalletBalancetotal().getPending();
 	}
 
 	/**
@@ -96,6 +112,7 @@ public class Wallet {
 	public boolean changePassword(String password) {
 		RequestPassword requestPassword = new RequestPassword("password_change", walletId);
 		requestPassword.setPassword(password);
+		unLockIfNecessary();
 		ResponseChanged responseChanged = (ResponseChanged) HttpClient.getResponse(requestPassword,
 				ResponseChanged.class);
 		return (responseChanged.getChanged() == 1);
@@ -138,14 +155,38 @@ public class Wallet {
 	}
 
 	/**
-	 * Returns a lists of all addresses inside this Wallet.
+	 * Returns the first Account in this Wallet.
 	 * 
-	 * @return A list of addresses.
+	 * @return The first Account in this Wallet.
 	 */
-	public List<String> getAllAddresses() {
-		ResponseListAccounts listAccountsResponse = (ResponseListAccounts) HttpClient
-				.getResponse(new RequestWallet("account_list", walletId), ResponseListAccounts.class);
-		return listAccountsResponse.getAccounts();
+	public Account getAccount() {
+		return getAccount(0);
+	}
+
+	/**
+	 * Returns the Account at given index in this Wallet.
+	 * 
+	 * @param index
+	 *            The index of the Account to retrieve.
+	 * @return The Account at given index in this Wallet.
+	 */
+	public Account getAccount(int index) {
+		return getAllAccounts().get(index);
+	}
+	// TODO error handling + testing
+
+	/**
+	 * Returns the Account with given address if it is part of this Wallet
+	 * 
+	 * @param address
+	 *            The address of the Account to create.
+	 * @return The Account with given address.
+	 */
+	public Account getAccount(String address) {
+		if (contains(address))
+			return new Account(address, this);
+		else
+			return null;
 	}
 
 	/**
@@ -154,19 +195,7 @@ public class Wallet {
 	 * @return A list of accounts.
 	 */
 	public List<Account> getAllAccounts() {
-		return getAllAddresses().stream().map(address -> new Account(address)).collect(Collectors.toList());
-	}
-
-	/**
-	 * Creates a new address, insert next deterministic key in Wallet.
-	 * enable_control required
-	 * 
-	 * @return The new address.
-	 */
-	public String createAddress() {
-		ResponseCreateAccount createAccountResponse = (ResponseCreateAccount) HttpClient
-				.getResponse(new RequestWallet("account_create", walletId), ResponseCreateAccount.class);
-		return createAccountResponse.getAccount();
+		return getAllAddresses().stream().map(address -> new Account(address, this)).collect(Collectors.toList());
 	}
 
 	/**
@@ -176,7 +205,7 @@ public class Wallet {
 	 * @return The new account.
 	 */
 	public Account createAccount() {
-		return new Account(createAddress());
+		return new Account(createAddress(), this);
 	}
 
 	// public List<String> createAddresses(int count) {
@@ -205,29 +234,33 @@ public class Wallet {
 	// }
 
 	/**
-	 * Returns how many RAW is owned and how many have not yet been received by all
+	 * Returns how many NANO is owned and how many have not yet been received by all
 	 * addresses in Wallet.
 	 * 
-	 * @return A HashMap containing addresses and Balances.
+	 * @return A HashMap containing Accounts and Balances.
 	 */
-	public HashMap<String, Balance> getBalances() {
-		return getBalances(BigInteger.ZERO);
+	public HashMap<Account, Balance> getBalances() {
+		return getBalances(NANO.ZERO);
 	}
 
 	/**
 	 * 
-	 * Returns addresses in Wallet with balances more or equal to threshold.
+	 * Returns Accounts in Wallet with balances more or equal to threshold.
 	 * 
 	 * @param threshold
 	 *            The threshold for filtering.
-	 * @return A HashMap containing addresses and Balances.
+	 * @return A HashMap containing Accounts and Balances.
 	 */
-	public HashMap<String, Balance> getBalances(BigInteger threshold) {
+	public HashMap<Account, Balance> getBalances(NANO threshold) {
 		RequestBalance balanceRequest = new RequestBalance("wallet_balances", walletId);
-		balanceRequest.setThreshold(threshold);
+		balanceRequest.setThreshold(threshold.getRAW());
 		ResponseBalance balanceResponse = (ResponseBalance) HttpClient.getResponse(balanceRequest,
 				ResponseBalance.class);
-		return balanceResponse.getBalances();
+
+		Map<Account, Balance> y = balanceResponse.getBalances().entrySet().stream()
+				.collect(Collectors.toMap(e -> (Account) new Account(e.getKey()), e -> (Balance) e.getValue()));
+
+		return (HashMap<Account, Balance>) y;
 	}
 
 	/**
@@ -241,108 +274,27 @@ public class Wallet {
 		return (pendingResponse.getStarted() == 1);
 	}
 
-	/**
-	 * Send amount from source Address in wallet to destination Address
-	 * 
-	 * @param sourceAddress
-	 *            The address to send from, must be in current wallet
-	 * @param destinationAddress
-	 *            The address to send to
-	 * @param amount
-	 *            The amount to send
-	 * @param id
-	 *            A unique id for each spend to provide idempotency
-	 * @return The send block that was generated
-	 */
-	public String send(String sourceAddress, String destinationAddress, BigInteger amount, String id) {
-		RequestSend requestSend = new RequestSend("send", walletId);
-		requestSend.setSource(sourceAddress);
-		requestSend.setDestination(destinationAddress);
-		requestSend.setAmount(amount);
-		requestSend.setId(id);
-		ResponseBlock sendResponse = (ResponseBlock) HttpClient.getResponse(requestSend, ResponseBlock.class);
-		return sendResponse.getBlock();
+	// Private methods
+	private Balance getWalletBalancetotal() {
+		return (Balance) HttpClient.getResponse(new RequestWallet("wallet_balance_total", walletId), Balance.class);
 	}
 
-	/**
-	 * Send amount from source Account in wallet to destination Account
-	 * 
-	 * @param sourceAccount
-	 *            The account to send from, must be in current wallet
-	 * @param destinationAccount
-	 *            The address to send to
-	 * @param amount
-	 *            The amount to send
-	 * @param id
-	 *            A unique id for each spend to provide idempotency
-	 * @return The send block that was generated
-	 */
-	public String send(Account sourceAccount, Account destinationAccount, BigInteger amount, String id) {
-		return send(sourceAccount.getAddress(), destinationAccount.getAddress(), amount, id);
+	private List<String> getAllAddresses() {
+		ResponseListAccounts listAccountsResponse = (ResponseListAccounts) HttpClient
+				.getResponse(new RequestWallet("account_list", walletId), ResponseListAccounts.class);
+		return listAccountsResponse.getAccounts();
 	}
 
-	/**
-	 * Receive pending block for Address in Wallet.
-	 * 
-	 * @param address
-	 *            The Address in this Wallet the pending belongs to.
-	 * @param block
-	 *            The pending block
-	 * @return The receive block
-	 */
-	public String receive(String address, String block) {
-		RequestReceive requestReceive = new RequestReceive("receive", walletId);
-		requestReceive.setAddress(address);
-		requestReceive.setBlock(block);
-		ResponseBlock sendResponse = (ResponseBlock) HttpClient.getResponse(requestReceive, ResponseBlock.class);
-		return sendResponse.getBlock();
+	private String createAddress() {
+		ResponseCreateAccount createAccountResponse = (ResponseCreateAccount) HttpClient
+				.getResponse(new RequestWallet("account_create", walletId), ResponseCreateAccount.class);
+		return createAccountResponse.getAccount();
 	}
 
-	/**
-	 * Receive pending block for Address in Wallet.
-	 * 
-	 * @param address
-	 *            The Address in this Wallet the pending belongs to.
-	 * @param block
-	 *            The pending block
-	 * @param work
-	 *            A work value from an external source
-	 * @return The receive block
-	 */
-	public String receive(String address, String block, String work) {
-		RequestReceive requestReceive = new RequestReceive("receive", walletId);
-		requestReceive.setAddress(address);
-		requestReceive.setBlock(block);
-		requestReceive.setWork(work);
-		ResponseBlock sendResponse = (ResponseBlock) HttpClient.getResponse(requestReceive, ResponseBlock.class);
-		return sendResponse.getBlock();
-	}
-
-	/**
-	 * Receive pending block for Account in Wallet.
-	 * 
-	 * @param account
-	 *            The Account in this Wallet the pending belongs to.
-	 * @param block
-	 *            The pending block
-	 * @return The receive block
-	 */
-	public String receive(Account account, String block) {
-		return receive(account.getAddress(), block);
-	}
-
-	/**
-	 * Receive pending block for Account in Wallet.
-	 * 
-	 * @param account
-	 *            The Account in this Wallet the pending belongs to.
-	 * @param block
-	 *            The pending block
-	 * @param work
-	 *            A work value from an external source
-	 * @return The receive block
-	 */
-	public String receive(Account account, String block, String work) {
-		return receive(account.getAddress(), block, work);
+	protected boolean unLockIfNecessary() {
+		if (!isLocked() && (password == null)) {
+			return true;
+		} else
+			throw new PasswordException("No password provided");
 	}
 }

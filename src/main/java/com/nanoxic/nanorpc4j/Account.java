@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.List;
 
 import com.nanoxic.nanorpc4j.exceptions.InitializationException;
+import com.nanoxic.nanorpc4j.exceptions.ResponseException;
+import com.nanoxic.nanorpc4j.exceptions.UnattachedAccountException;
 
 /**
  * Class representing a single Nano account
@@ -15,10 +17,13 @@ public class Account {
 
 	private String address;
 	private String publicKey;
+	private Wallet wallet;
 
 	// Constructor
 	/**
-	 * Construct the Account using either an address or a public key
+	 * Construct a detached Account using either an address or a public key. A
+	 * detached Account is an Account that is not part of any Wallet, it can be used
+	 * as a receiver of funds. Use Wallet.getAccount() to get an attached Account.
 	 * 
 	 * @param accountKey
 	 *            An address or an account public key
@@ -32,55 +37,67 @@ public class Account {
 				throw new InitializationException("Not a valid NANO address");
 			}
 		} else {
-			this.address = getAddress(accountKey);
-			if (this.address == null)
+			try {
+				this.address = getAddress(accountKey);
+				this.publicKey = accountKey;
+			} catch (ResponseException e) {
 				throw new InitializationException("Not a valid NANO public key");
-			this.publicKey = accountKey;
+			}
 		}
+	}
+
+	Account(String accountKey, Wallet wallet) {
+		this(accountKey);
+		this.wallet = wallet;
 	}
 
 	// Getters
 	/**
-	 * Returns the address of the account
+	 * Returns the address of the Account
 	 * 
-	 * @return The address of the account
+	 * @return The address of the Account
 	 */
 	public String getAddress() {
 		return address;
 	}
 
 	/**
-	 * Returns the public key of the account
+	 * Returns the public key of the Account
 	 * 
-	 * @return The public key of the account
+	 * @return The public key of the Account
 	 */
 	public String getPublicKey() {
 		return publicKey;
 	}
 
-	// Private methods
-	private String getpublicKey() {
-		ResponseKey representativeResponse = (ResponseKey) HttpClient
-				.getResponse(new RequestAccount("account_key", address), ResponseKey.class);
-		return representativeResponse.getKey();
-	}
-
-	private String getAddress(String publicKey) {
-		ResponseAccount representativeResponse = (ResponseAccount) HttpClient
-				.getResponse(new RequestKey("account_get", publicKey), ResponseAccount.class);
-		return representativeResponse.getAccount();
+	/**
+	 * Returns the Wallet this Account belongs to
+	 * 
+	 * @return The Wallet this account belongs to
+	 */
+	public Wallet getWallet() {
+		return wallet;
 	}
 
 	// Public methods
+	/**
+	 * Returns whether or not this Account is part of a Wallet
+	 * 
+	 * @return True when this account is part of a Wallet
+	 */
+	public boolean isAttached() {
+		return (wallet != null);
+	}
+
 	/**
 	 * Returns how many RAW is owned by this account
 	 * 
 	 * @return The amount of RAW owned by this account
 	 */
-	public BigInteger getBalance() {
+	public NANO getBalance() {
 		Balance balanceResponse = (Balance) HttpClient.getResponse(new RequestAccount("account_balance", address),
 				Balance.class);
-		return new BigInteger(balanceResponse.getBalance());
+		return balanceResponse.getBalance();
 	}
 
 	/**
@@ -88,16 +105,16 @@ public class Account {
 	 * 
 	 * @return The amount of RAW pending for this account
 	 */
-	public BigInteger getPending() {
+	public NANO getPending() {
 		Balance balanceResponse = (Balance) HttpClient.getResponse(new RequestAccount("account_balance", address),
 				Balance.class);
-		return new BigInteger(balanceResponse.getPending());
+		return balanceResponse.getPending();
 	}
 
 	/**
-	 * Get number of blocks for a specific account
+	 * Get number of blocks for this account
 	 * 
-	 * @return Number of blocks for a specific account
+	 * @return Number of blocks for this account
 	 */
 	public int getBlockCount() {
 		ResponseBlockCount blockCountResponse = (ResponseBlockCount) HttpClient
@@ -106,9 +123,9 @@ public class Account {
 	}
 
 	/**
-	 * Returns the voting weight for account
+	 * Returns the voting weight for this account
 	 * 
-	 * @return The voting weight for account
+	 * @return The voting weight for this account
 	 */
 	public BigInteger getWeight() {
 		ResponseWeight weightResponse = (ResponseWeight) HttpClient
@@ -117,23 +134,52 @@ public class Account {
 	}
 
 	/**
-	 * Returns frontier, open block, change representative block, balance, last
-	 * modified timestamp from local database &amp; block count for account.
+	 * Returns the frontier for this account
 	 * 
-	 * @return An AccountInfo object containing the requested information
+	 * @return The frontier for account
 	 */
-	public AccountInfo getInfo() {
-		return (AccountInfo) HttpClient.getResponse(new RequestAccount("account_info", address), AccountInfo.class);
+	public String getFrontier() {
+		return getInfo().getFrontier();
+	}
+
+	/**
+	 * Returns the open block for this account
+	 * 
+	 * @return The open block for account
+	 */
+	public String getOpenBlock() {
+		return getInfo().getOpen_block();
+	}
+
+	/**
+	 * Returns the representative block for this account
+	 * 
+	 * @return The representative block for account
+	 */
+	public String getReprsentativeBlock() {
+		return getInfo().getRepresentative_block();
+	}
+
+	/**
+	 * Returns the last modified time for this account
+	 * 
+	 * @return The last modified time for account
+	 */
+	public String getLastModified() { // TODO String????
+		return getInfo().getModified_timestamp();
 	}
 
 	/**
 	 * Returns frontier, open block, change representative block, balance, last
-	 * modified timestamp from local database &amp; block count for account. Optionally
-	 * returns representative, voting weight, pending balance for account
+	 * modified timestamp from local database &amp; block count for account.
+	 * Optionally returns representative, voting weight, pending balance for account
 	 * 
-	 * @param representative Include the representative in the AccountInfo object 
-	 * @param weight Include the weight in the AccountInfo object
-	 * @param pending Include the pending in the AccountInfo object
+	 * @param representative
+	 *            Include the representative in the AccountInfo object
+	 * @param weight
+	 *            Include the weight in the AccountInfo object
+	 * @param pending
+	 *            Include the pending in the AccountInfo object
 	 * @return An AccountInfo object containing the requested information
 	 */
 	public AccountInfo getInfo(boolean representative, boolean weight, boolean pending) {
@@ -171,4 +217,76 @@ public class Account {
 		return representativeResponse.getRepresentative();
 	}
 
+	/**
+	 * Send amount from this Account to destination Account. Sending Account must be
+	 * attached to a Wallet.
+	 * 
+	 * @param destinationAccount
+	 *            The Account to send to
+	 * @param amount
+	 *            The amount to send
+	 * @param id
+	 *            A unique id for each spend to provide idempotency
+	 * @return The send block that was generated
+	 */
+	public String send(Account destinationAccount, NANO amount, String id) {
+		if (isAttached()) {
+			RequestSend requestSend = new RequestSend("send", wallet.getWalletId());
+			requestSend.setSource(address);
+			requestSend.setDestination(destinationAccount.getAddress());
+			requestSend.setAmount(amount.getRAW());
+			requestSend.setId(id);
+			wallet.unLockIfNecessary();
+			ResponseBlock sendResponse = (ResponseBlock) HttpClient.getResponse(requestSend, ResponseBlock.class);
+			return sendResponse.getBlock();
+		} else
+			throw new UnattachedAccountException("Current Account is not part of a Wallet.");
+	}
+
+	/**
+	 * Receive pending block.
+	 * 
+	 * @param block
+	 *            The pending block
+	 * @return The receive block
+	 */
+	public String receive(String block) {
+		return receive(block, null);
+	}
+
+	/**
+	 * Receive pending block using work from external source.
+	 * 
+	 * @param block
+	 *            The pending block
+	 * @param work
+	 *            A work value from an external source
+	 * @return The receive block
+	 */
+	public String receive(String block, String work) {
+		RequestReceive requestReceive = new RequestReceive("receive", wallet.getWalletId());
+		requestReceive.setAddress(address);
+		requestReceive.setBlock(block);
+		if (work != null)
+			requestReceive.setWork(work);
+		ResponseBlock sendResponse = (ResponseBlock) HttpClient.getResponse(requestReceive, ResponseBlock.class);
+		return sendResponse.getBlock();
+	} // TODO test receive functions
+
+	// Private methods
+	private String getpublicKey() {
+		ResponseKey representativeResponse = (ResponseKey) HttpClient
+				.getResponse(new RequestAccount("account_key", address), ResponseKey.class);
+		return representativeResponse.getKey();
+	}
+
+	private String getAddress(String publicKey) {
+		ResponseAccount representativeResponse = (ResponseAccount) HttpClient
+				.getResponse(new RequestKey("account_get", publicKey), ResponseAccount.class);
+		return representativeResponse.getAccount();
+	}
+
+	private AccountInfo getInfo() {
+		return (AccountInfo) HttpClient.getResponse(new RequestAccount("account_info", address), AccountInfo.class);
+	}
 }

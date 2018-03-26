@@ -5,6 +5,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+import com.nanoxic.nanorpc4j.exceptions.ResponseException;
+
 abstract class HttpClient {
 
 	private static String url;
@@ -20,6 +22,8 @@ abstract class HttpClient {
 			Class<S> response) {
 		HttpEntity<T> requestMessage = new HttpEntity<T>(request, headers);
 		S responeMessage = restTemplate.postForObject(url, requestMessage, response);
+		if (responeMessage.getError() != null)
+			throw new ResponseException(responeMessage.getError());
 		return responeMessage;
 
 	}

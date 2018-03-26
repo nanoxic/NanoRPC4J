@@ -1,7 +1,5 @@
 package com.nanoxic.nanorpc4j;
 
-import java.math.BigInteger;
-
 /**
  * Class making the Nodes payment infrastructure available
  * 
@@ -46,33 +44,33 @@ public class Payment {
 
 	/**
 	 * Begin a new payment session. Searches wallet for an account that's marked as
-	 * available and has a 0 balance. If one is found, the account number is
-	 * returned and is marked as unavailable. If no account is found, a new account
-	 * is created, placed in the wallet, and returned.
+	 * available and has a 0 balance. If one is found, the account is returned and
+	 * is marked as unavailable. If no account is found, a new account is created,
+	 * placed in the wallet, and returned.
 	 * 
-	 * @return The account number
+	 * @return The Account
 	 */
-	public String begin() {
+	public Account begin() {
 		ResponseAccount accountResponse = (ResponseAccount) HttpClient
 				.getResponse(new RequestWallet("payment_begin", walletId), ResponseAccount.class);
-		return accountResponse.getAccount();
+		return new Account(accountResponse.getAccount());
 	}
 
 	/**
 	 * Wait for payment of 'amount' to arrive in 'account' or until 'timeout'
 	 * milliseconds have elapsed.
 	 * 
-	 * @param address
-	 *            The address to receive a payment on
+	 * @param account
+	 *            The Account to receive a payment on
 	 * @param amount
 	 *            The expected amount
 	 * @param timeout
 	 *            The time to wait in milliseconds to wait for the payment to arrive
 	 * @return True if successful
 	 */
-	public boolean wait(String address, BigInteger amount, long timeout) {
-		RequestPaymentWait paymentWaitRequest = new RequestPaymentWait("payment_wait", address);
-		paymentWaitRequest.setAmount(amount);
+	public boolean wait(Account account, NANO amount, long timeout) {
+		RequestPaymentWait paymentWaitRequest = new RequestPaymentWait("payment_wait", account.getAddress());
+		paymentWaitRequest.setAmount(amount.getRAW());
 		paymentWaitRequest.setTimeout(timeout);
 		ResponseStatus statusResponse = (ResponseStatus) HttpClient.getResponse(paymentWaitRequest,
 				ResponseStatus.class);

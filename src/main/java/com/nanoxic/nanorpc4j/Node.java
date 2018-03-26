@@ -3,6 +3,7 @@ package com.nanoxic.nanorpc4j;
 import java.math.BigInteger;
 
 import com.nanoxic.nanorpc4j.exceptions.InitializationException;
+import com.nanoxic.nanorpc4j.exceptions.ResponseException;
 
 /**
  * 
@@ -109,6 +110,33 @@ public class Node {
 	}
 
 	/**
+	 * Check whether this Node contains Wallet.
+	 * 
+	 * @param wallet
+	 *            The wallet to check.
+	 * @return True if the wallet is part of the Node.
+	 */
+	public static boolean contains(Wallet wallet) {
+		return contains(wallet.getWalletId());
+	}
+
+	/**
+	 * Check whether this Node contains Wallet by ID.
+	 * 
+	 * @param walletId
+	 *            The walletId to check.
+	 * @return True if the wallet is part of this Node.
+	 */
+	public static boolean contains(String walletId) {
+		try {
+			HttpClient.getResponse(new RequestWallet("wallet_locked", walletId), ResponseLocked.class);
+		} catch (ResponseException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Check whether given string is a valid Nano address
 	 * 
 	 * @param address
@@ -168,7 +196,30 @@ public class Node {
 	}
 
 	/**
-	 * Generates work for block enable_control required
+	 * 
+	 * Creates a new random wallet id. enable_control required.
+	 * 
+	 * @return The new Wallet.
+	 */
+	public Wallet createWallet() {
+		ResponseWallet responseWallet = (ResponseWallet) HttpClient.getResponse(new RequestMessage("wallet_create"),
+				ResponseWallet.class);
+		return new Wallet(responseWallet.getWallet());
+
+	} // TODO test
+
+	/**
+	 * Destroys wallet and all contained accounts. enable_control required.
+	 * 
+	 * @param wallet The Wallet to destroy.
+	 */
+	public void destroyWallet(Wallet wallet) {
+		HttpClient.getResponse(new RequestWallet("wallet_destroy", wallet.getWalletId()), ResponseWallet.class);
+
+	} // TODO test
+
+	/**
+	 * Generates work for block. enable_control required.
 	 * 
 	 * @param block
 	 *            The pending block
