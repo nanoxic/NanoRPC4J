@@ -6,7 +6,7 @@
 
 	<groupId>com.nanoxic</groupId>
 	<artifactId>NanoRPC4J</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.2.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>NanoRPC4J</name>
@@ -14,7 +14,7 @@
 	<url>https://github.com/nanoxic/NanoRPC4J</url>
 
 	<properties>
-		<latest.release>0.1</latest.release>
+		<latest.release>0.2</latest.release>
 		<spring.version>5.0.3.RELEASE</spring.version>
 		<junit.version>5.1.0</junit.version>
 		<maven.compiler.source>1.8</maven.compiler.source>

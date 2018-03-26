@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.nanoxic.nanorpc4j.NANO;
 
-public class NANOtest {
+public class NANOTest {
 
 	NANO NANO1 = NANO.ONE;
 	NANO NANO2 = new NANO("2");
