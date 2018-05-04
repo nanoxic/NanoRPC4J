@@ -61,6 +61,8 @@ public class AccountTest {
 	@Test
 	public void ValidPublicKeyTest() {
 		Account account = new Account(publicKey);
+		System.out.println(account.getAddress());
+		System.out.println(address);
 		assertEquals(address, account.getAddress());
 	}
 

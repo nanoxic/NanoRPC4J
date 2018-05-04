@@ -258,7 +258,7 @@ public class Wallet {
 				ResponseBalance.class);
 
 		Map<Account, Balance> y = balanceResponse.getBalances().entrySet().stream()
-				.collect(Collectors.toMap(e -> (Account) new Account(e.getKey()), e -> (Balance) e.getValue()));
+				.collect(Collectors.toMap(e -> (Account) new Account(e.getKey(), this), e -> (Balance) e.getValue()));
 
 		return (HashMap<Account, Balance>) y;
 	}
